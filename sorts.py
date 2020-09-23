@@ -11,7 +11,7 @@ CONTRIBUTOR:
     Paras Pandya [GitHub: paras4eva]
 
 PYLINT:
-    9.38 / 10 (too-few-public-methods)
+    10 / 10
 """
 
 
@@ -39,7 +39,10 @@ class Sort():
 
     def insertion(self):
         """
-        Method to demonstrate insertion sort on input.
+        Method to demonstrate insertion sort on a list. It can be
+        used for small list or nealy sorted list.
+
+        TIME COMPLEXITY: O(n^2)
 
         Returns
         -------
@@ -63,8 +66,39 @@ class Sort():
 
         return self._list
 
+    def selection(self):
+        """
+        Method to demonstrate selection sort on a list. It can be
+        used when memory write is costlier operation. Because, it
+        makes no more than O(n) swaps.
+
+        TIME COMPLEXITY: O(n^2)
+
+        Returns
+        -------
+        Sorted list using selection sort algorithm.
+
+        """
+        for i in range(len(self._list)-1):
+            # Set index to keep minimun value
+            ind = i
+
+            # Iterate through all elements to its right side finding
+            # minimum, and storing index value.
+            for j in range(i+1, len(self._list)):
+                if self._list[j] < self._list[ind]:
+                    ind = j
+
+            # Swap index values
+            temp = self._list[ind]
+            self._list[ind] = self._list[i]
+            self._list[i] = temp
+
+        return self._list
+
 
 if __name__ == "__main__":
     l1 = [8, 4, 2, 1, 5, 3, 9, 11, 7, 10]
     srt = Sort(l1)
-    print("SORTED: ", srt.insertion())
+    print("INSERTION:", srt.insertion())
+    print("SELECTION:", srt.selection())
