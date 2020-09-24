@@ -13,6 +13,7 @@ CONTRIBUTOR:
 PYLINT:
     10 / 10
 """
+import math
 
 
 class Sort():
@@ -96,9 +97,62 @@ class Sort():
 
         return self._list
 
+    def merge(self, array=None):
+        """
+        Method to demonstrate merge sort on a list. It is useful in
+        sorting linked list as it sorts sequentially and requires low
+        random access [e.g. in Array].
+
+        TIME COMPLEXITY: O(n*Log(n))
+
+        Parameters
+        ----------
+        array : LIST, optional
+            To be used only for recurssive call(s). User need not
+            pass any list. The default is None.
+
+        Returns
+        -------
+        array : LIST
+            Sorted list using merge sort algorithm.
+
+        """
+        # Used only at begining to load list
+        if array is None:
+            array = self._list.copy()
+
+        # For lenght of array greater than 1. Otherwise just return
+        if len(array) > 1:
+            # Divide list in two half
+            half = math.ceil(len(array)/2)
+            list1 = array[:half]
+            list2 = array[half:]
+
+            # Recursive call(s) to divided halves
+            list1 = self.merge(list1)
+            list2 = self.merge(list2)
+            array = list()
+
+            # Conquer: re-arrange list with sorted elements. Run till
+            # any one list goes empty
+            while not (len(list1)==0 or len(list2)==0):
+                if list1[0] <= list2[0]:
+                    array.append(list1.pop(0))
+                else:
+                    array.append(list2.pop(0))
+
+            # Add remaining list elements as it is
+            if list1:
+                array.extend(list1)
+            else:
+                array.extend(list2)
+
+        return array
+
 
 if __name__ == "__main__":
-    l1 = [8, 4, 2, 1, 5, 3, 9, 11, 7, 10]
+    l1 = [8, 4, 2, 1, 5, 3, 9, 6, 11, 7, 10]
     srt = Sort(l1)
     print("INSERTION:", srt.insertion())
     print("SELECTION:", srt.selection())
+    print("MERGE:", srt.merge())
