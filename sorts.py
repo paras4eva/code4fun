@@ -38,6 +38,44 @@ class Sort():
         """
         self._list = array
 
+    @staticmethod
+    def __divide(array, pivot):
+        """
+        Static method used for quick sort. It devides list into three
+        lists with respect to its pivot value.
+
+        Parameters
+        ----------
+        array : LIST
+            List to divide.
+        pivot : INTEGER
+            Pivot number to divide list with.
+
+        Returns
+        -------
+        less : LIST
+            List with elements having LESS value than pivot.
+        equal : LIST
+            List with elements having SAME value than pivot.
+        great : LIST
+            List with elements having GREATER value than pivot.
+
+        """
+        # Initialize three placeholders
+        less, equal, great = list(), list(), list()
+
+        # Iterate through all elements of list to divide and
+        # populate all placeholders
+        for i in array:
+            if i < pivot:
+                less.append(i)
+            elif i > pivot:
+                great.append(i)
+            else:
+                equal.append(i)
+
+        return less, equal, great
+
     def insertion(self):
         """
         Method to demonstrate insertion sort on a list. It can be
@@ -149,6 +187,48 @@ class Sort():
 
         return array
 
+    def quick(self, array=None):
+        """
+        Method to demonstrate quick sort on a list. Here, pivot is
+        last element of a list. There are various ways of selecting
+        pivot. It works best when chosen pivot is middle value.
+
+        TIME COMPLEXITY: O(n*Log(n)) [ Worst: O(n^2) for sorted list]
+
+        Parameters
+        ----------
+        array : TYPE, optional
+            DESCRIPTION. The default is None.
+
+        Returns
+        -------
+        array : TYPE
+            DESCRIPTION.
+
+        """
+        # Used only at begining to load list
+        if array is None:
+            array = self._list
+
+        # For lenght of array greater than 1. Otherwise just return
+        if len(array) > 1:
+            # Pivot selection: last element of list
+            pivot = array[-1]
+            # Divide given list into three parts
+            lss, eql, grt = self.__divide(array, pivot)
+
+            # Recursive calls to less and greater than parts
+            lss = self.quick(lss.copy())
+            grt = self.quick(grt.copy())
+            array = list()
+
+            # Conquer: merge sorted lists in following order
+            array.extend(lss)
+            array.extend(eql)
+            array.extend(grt)
+
+        return array
+
 
 if __name__ == "__main__":
     l1 = [8, 4, 2, 1, 5, 3, 9, 6, 11, 7, 10]
@@ -156,3 +236,4 @@ if __name__ == "__main__":
     print("INSERTION:", srt.insertion())
     print("SELECTION:", srt.selection())
     print("MERGE:", srt.merge())
+    print("QUICK:", srt.quick())
