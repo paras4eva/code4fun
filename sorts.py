@@ -135,6 +135,39 @@ class Sort():
 
         return self._list
 
+    def bubble(self):
+        """
+        Method to demonstrate bubble sort on a list. Its simplicity
+        makes easy to understand sorting algorithm. It is popular in
+        finding small error(s) [like swipe just two elements] in case
+        of nearly sorted array in linear time complexity.
+
+        TIME COMPLEXITY: O(n^2) [Reverse order]
+
+        Returns
+        -------
+        Sorted list using bubble sort algorithm.
+
+        """
+        for i in range(len(self._list)):
+            # Set pass to False
+            pass_use = False
+            # Iterate through all elements to sort. After each sub-
+            # loop last element will have sorted[max] element
+            for j in range(len(self._list) - i - 1):
+                if self._list[j] > self._list[j+1]:
+                    # Pass used
+                    pass_use = True
+                    # Swap elements
+                    temp = self._list[j]
+                    self._list[j] = self._list[j+1]
+                    self._list[j+1] = temp
+
+            # If pass not used, means array is already sorted.
+            if not pass_use:
+                break
+        return self._list
+
     def merge(self, array=None):
         """
         Method to demonstrate merge sort on a list. It is useful in
@@ -197,13 +230,14 @@ class Sort():
 
         Parameters
         ----------
-        array : TYPE, optional
-            DESCRIPTION. The default is None.
+        array : LIST, optional
+            To be used only for recurssive call(s). User need not
+            pass any list. The default is None.
 
         Returns
         -------
-        array : TYPE
-            DESCRIPTION.
+        array : LIST
+            Sorted list using quick sort algorithm.
 
         """
         # Used only at begining to load list
@@ -237,3 +271,4 @@ if __name__ == "__main__":
     print("SELECTION:", srt.selection())
     print("MERGE:", srt.merge())
     print("QUICK:", srt.quick())
+    print("BUBBLE:",srt.bubble())
