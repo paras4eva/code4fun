@@ -4,8 +4,9 @@ ABSTRACT:
     This file has various sorting algorithms applied to an array.
 
 ALGORITHMS:
-    - Insertion sort
-    - Selection sort
+    - Insertion sort    - Selection sort
+    - Bubble sort       - Merge sort
+    - Quick sort
 
 CONTRIBUTOR:
     Paras Pandya [GitHub: paras4eva]
@@ -21,6 +22,7 @@ class Sort():
     Class to define various sorting algorithms to understand it works
     differently to achieve same result.
     """
+    # TODO: Add time comparison method. Add test cases
 
     def __init__(self, array):
         """
