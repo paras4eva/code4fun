@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ABSTRACT:
-    This file has various sorting algorithms applied to an array.
+    This file demonstrate various algorithms.
 
 ALGORITHMS:
     - Insertion sort    - Selection sort
@@ -12,7 +12,7 @@ CONTRIBUTOR:
     Paras Pandya [GitHub: paras4eva]
 
 PYLINT:
-    10 / 10
+    9.88 / 10 [pylint > fixme]
 """
 import math
 
