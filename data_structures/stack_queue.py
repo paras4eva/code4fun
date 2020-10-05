@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 ABSTRACT:
-    This file provides data structures along with ADT
+    This file demonstrate data structures with ADT
 
 DATA STRUCTURES:
     - Stack
+    - Queue
 
 CONTRIBUTOR:
     Paras Pandya [GitHub: paras4eva]
@@ -245,17 +246,27 @@ class DataStructure():
 
 
 if __name__ == "__main__":
-    ds = DataStructure(3, "queue")
-    print("EMPTY?:", ds.is_empty())
-    ds.enqueue(1)
-    print("SIZE:", ds.size())
-    ds.enqueue(2)
-    print("FRONT:", ds.front())
-    print("DEQUEUE:", ds.dequeue())
-    ds.enqueue(3)
-    ds.enqueue(4)
-    ds.enqueue(5)
-    print("DEQUEUE:", ds.dequeue())
-    ds.enqueue(5)
-    ds.enqueue(6)
-    print("FRONT:", ds.front())
+    # Main method to demonstrate functionality of stack and queue
+    st = DataStructure(3, "stack")
+    qu = DataStructure(3, "queue")
+    ops = ["empty", "add", "add", "look", "add", "size", "add", "",
+           "remove", "remove", "remove", "remove", "empty", "size"]
+    for i, op in zip(range(len(ops)), ops):
+        if op.lower() == "empty":
+            print("STACK > Empty?", st.is_empty())
+            print("QUEUE > Empty?", qu.is_empty())
+        elif op.lower() == "look":
+            print("STACK > Top:", st.top())
+            print("QUEUE > Front:", qu.front())
+        elif op.lower() == "size":
+            print("STACK > Size:", st.size())
+            print("QUEUE > Size:", qu.size())
+        elif op.lower() == "add":
+            st.push(i)
+            qu.enqueue(i)
+        elif op.lower() == "remove":
+            print("STACK > Pop:", st.pop())
+            print("QUEUE > Dequeue:", qu.dequeue())
+        else:
+            st.front()
+            qu.top()
