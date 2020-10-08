@@ -10,7 +10,7 @@ CONTRIBUTOR:
     Paras Pandya [GitHub: paras4eva]
 
 PYLINT:
-    9.8 / 10 [too-few-public-methods]
+    9.83 / 10 [too-few-public-methods]
 """
 
 
@@ -19,7 +19,7 @@ class Node():
     Class to provide linked list structure.
     """
 
-    def __init__(self, data, sentinal=False):
+    def __init__(self, data, ll_type="single", sentinal=False):
         """
         Instantiate node with suitable parameters. Sentinals will not
         have data parameter [e.g. header]
@@ -28,6 +28,8 @@ class Node():
         ----------
         data : ANY
             Data to store as element.
+        ll_type : STRING, optional
+            Type of linked list. The default is single.
         sentinal : BOOLEAN, optional
             To create node of element or sentinals. The default is False.
 
@@ -36,11 +38,16 @@ class Node():
         None.
 
         """
-        self.prev = None
+        self.next = None
         # Skip assigning data in case of sentinal
         if not sentinal:
             self.data = data
-        self.next = None
+        if ll_type.lower() == "double":
+            self.prev = None
+        else:
+            if ll_type.lower() != "single":
+                raise Exception("LINKED LIST: Not supported type:",
+                                ll_type)
 
 
 class LinkedList():
@@ -48,7 +55,7 @@ class LinkedList():
     Class demonstrating linked list ADT.
     """
 
-    def __init__(self):
+    def __init__(self, ll_type="single"):
         """
         Method to instantiate linked list header [sentinal] node.
 
@@ -57,9 +64,10 @@ class LinkedList():
         None.
 
         """
-        self.header = Node(None, True)
+        self._type = ll_type
+        self.header = Node(None, self._type, True)
 
-    def insert(self, obj):
+    def prepend(self, obj):
         """
         Method to insert object in front of linked list.
 
@@ -73,17 +81,19 @@ class LinkedList():
         None.
 
         """
-        element = Node(obj)
+        element = Node(obj, self._type)
         if self.header.next is None:
             # If linked list is empty
-            element.prev = self.header
+            if self._type == "double":
+                element.prev = self.header
             self.header.next = element
         else:
             # Insert logic otherwise
-            self.header.next.prev = element
+            if self._type == "double":
+                self.header.next.prev = element
+                element.prev = self.header
             element.next = self.header.next
             self.header.next = element
-            element.prev = self.header
 
     def append(self, obj):
         """
@@ -99,13 +109,14 @@ class LinkedList():
         None.
 
         """
-        element = Node(obj)
+        element = Node(obj, self._type)
         tail = self.header
         # Fetch last element
         while tail.next is not None:
             tail = tail.next
         # Append logic
-        element.prev = tail
+        if self._type == "double":
+            element.prev = tail
         element.next = tail.next
         tail.next = element
 
@@ -136,22 +147,23 @@ class LinkedList():
             return None
         # Remove logic
         data = tail.data
-        tail.prev.next = tail.next
-        if tail.next is not None:
-            # If element not last on linked list
-            tail.next.prev = tail.prev
+        if self._type == "double":
+            tail.prev.next = tail.next
+            if tail.next is not None:
+                # If element not last on linked list
+                tail.next.prev = tail.prev
         # Clear references
+            tail.prev = None
         tail.next = None
-        tail.prev = None
         # Return removed data to review
         return data
 
 
 if __name__ == "__main__":
-    ll = LinkedList()
+    ll = LinkedList("double")
     ll.append(1)
     ll.append(2)
-    ll.insert(3)
+    ll.prepend(3)
     print(ll.header.next.next.prev.data)
     ll.remove(3)
     print(ll.header.next.next.data)
