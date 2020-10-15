@@ -10,7 +10,7 @@ CONTRIBUTOR:
     Paras Pandya [GitHub: paras4eva]
 
 PYLINT:
-    9.8 / 10 [too-few-public-methods]
+    10 / 10
 """
 
 
@@ -18,8 +18,9 @@ class Node():
     """
     Class to provide linked list structure.
     """
+    # pylint: disable=too-few-public-methods
 
-    def __init__(self, data, sentinal=False):
+    def __init__(self, data, ll_type="single", sentinal=False):
         """
         Instantiate node with suitable parameters. Sentinals will not
         have data parameter [e.g. header]
@@ -28,6 +29,8 @@ class Node():
         ----------
         data : ANY
             Data to store as element.
+        ll_type : STRING, optional
+            Type of linked list. The default is single.
         sentinal : BOOLEAN, optional
             To create node of element or sentinals. The default is False.
 
@@ -36,11 +39,16 @@ class Node():
         None.
 
         """
-        self.prev = None
+        self.next = None
         # Skip assigning data in case of sentinal
         if not sentinal:
             self.data = data
-        self.next = None
+        if ll_type.lower() == "double":
+            self.prev = None
+        else:
+            if ll_type.lower() != "single":
+                raise Exception("LINKED LIST: Not supported type:",
+                                ll_type)
 
 
 class LinkedList():
@@ -48,7 +56,7 @@ class LinkedList():
     Class demonstrating linked list ADT.
     """
 
-    def __init__(self):
+    def __init__(self, ll_type="single"):
         """
         Method to instantiate linked list header [sentinal] node.
 
@@ -57,9 +65,10 @@ class LinkedList():
         None.
 
         """
-        self.header = Node(None, True)
+        self._type = ll_type
+        self.header = Node(None, self._type, True)
 
-    def insert(self, obj):
+    def prepend(self, obj):
         """
         Method to insert object in front of linked list.
 
@@ -73,17 +82,19 @@ class LinkedList():
         None.
 
         """
-        element = Node(obj)
+        element = Node(obj, self._type)
         if self.header.next is None:
             # If linked list is empty
-            element.prev = self.header
+            if self._type == "double":
+                element.prev = self.header
             self.header.next = element
         else:
             # Insert logic otherwise
-            self.header.next.prev = element
+            if self._type == "double":
+                self.header.next.prev = element
+                element.prev = self.header
             element.next = self.header.next
             self.header.next = element
-            element.prev = self.header
 
     def append(self, obj):
         """
@@ -99,13 +110,14 @@ class LinkedList():
         None.
 
         """
-        element = Node(obj)
+        element = Node(obj, self._type)
         tail = self.header
         # Fetch last element
         while tail.next is not None:
             tail = tail.next
         # Append logic
-        element.prev = tail
+        if self._type == "double":
+            element.prev = tail
         element.next = tail.next
         tail.next = element
 
@@ -124,34 +136,74 @@ class LinkedList():
             Returns element removed.
 
         """
-        tail = self.header.next
+        tail = self.header
         # Find object with given element data
-        while tail:
-            if tail.data == obj:
+        while tail.next:
+            if tail.next.data == obj:
                 break
             tail = tail.next
-        if not tail:
+        if not tail.next:
             # If requested obj is not present
             print("ERROR: No object with element:", obj)
             return None
         # Remove logic
-        data = tail.data
-        tail.prev.next = tail.next
-        if tail.next is not None:
-            # If element not last on linked list
-            tail.next.prev = tail.prev
+        data = tail.next.data
+        tail.next = tail.next.next
+        if self._type == "double":
+            if tail.next.next is not None:
+                # If element not last on linked list
+                tail.next.next.prev = tail.next.prev
         # Clear references
-        tail.next = None
-        tail.prev = None
+            tail.next.prev = None
         # Return removed data to review
         return data
 
+    def travel(self):
+        """
+        Metod to traverse through given linked list in forward
+        direction.
+
+        Returns
+        -------
+        None.
+
+        """
+        if self._type == "circle":
+            print("NOT SUPPORTED YET!")
+            return
+
+        lst = list()
+        tail = self.header.next
+
+        # Collect all elements of linked list
+        while tail and hasattr(tail, "data") is not None:
+            lst.append(tail.data)
+            tail = tail.next
+
+        print("Linked List [%s]:" % self._type, lst)
+
 
 if __name__ == "__main__":
-    ll = LinkedList()
-    ll.append(1)
-    ll.append(2)
-    ll.insert(3)
-    print(ll.header.next.next.prev.data)
-    ll.remove(3)
-    print(ll.header.next.next.data)
+    # Main method to demonstrate functionality of linked list
+    s_ll = LinkedList()
+    d_ll = LinkedList("double")
+    ops = ["append", "append", "prepend", "travel", "remove",
+           "travel"]
+    PRESENT = None
+    for i, op in zip(range(len(ops)), ops):
+        if op.lower() == "append":
+            PRESENT = i
+            s_ll.append(i)
+            d_ll.append(i)
+        elif op.lower() == "prepend":
+            PRESENT = i
+            s_ll.prepend(i)
+            d_ll.prepend(i)
+        elif PRESENT is not None and op.lower() == "remove":
+            s_ll.remove(PRESENT)
+            d_ll.remove(PRESENT)
+        elif op.lower() == "travel":
+            s_ll.travel()
+            d_ll.travel()
+        else:
+            print("ERROR: Not supported operation '%s'" % op.lower())
