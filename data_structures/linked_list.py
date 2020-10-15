@@ -10,7 +10,7 @@ CONTRIBUTOR:
     Paras Pandya [GitHub: paras4eva]
 
 PYLINT:
-    9.83 / 10 [too-few-public-methods]
+    10 / 10
 """
 
 
@@ -18,6 +18,7 @@ class Node():
     """
     Class to provide linked list structure.
     """
+    # pylint: disable=too-few-public-methods
 
     def __init__(self, data, ll_type="single", sentinal=False):
         """
@@ -135,35 +136,74 @@ class LinkedList():
             Returns element removed.
 
         """
-        tail = self.header.next
+        tail = self.header
         # Find object with given element data
-        while tail:
-            if tail.data == obj:
+        while tail.next:
+            if tail.next.data == obj:
                 break
             tail = tail.next
-        if not tail:
+        if not tail.next:
             # If requested obj is not present
             print("ERROR: No object with element:", obj)
             return None
         # Remove logic
-        data = tail.data
+        data = tail.next.data
+        tail.next = tail.next.next
         if self._type == "double":
-            tail.prev.next = tail.next
-            if tail.next is not None:
+            if tail.next.next is not None:
                 # If element not last on linked list
-                tail.next.prev = tail.prev
+                tail.next.next.prev = tail.next.prev
         # Clear references
-            tail.prev = None
-        tail.next = None
+            tail.next.prev = None
         # Return removed data to review
         return data
 
+    def travel(self):
+        """
+        Metod to traverse through given linked list in forward
+        direction.
+
+        Returns
+        -------
+        None.
+
+        """
+        if self._type == "circle":
+            print("NOT SUPPORTED YET!")
+            return
+
+        lst = list()
+        tail = self.header.next
+
+        # Collect all elements of linked list
+        while tail and hasattr(tail, "data") is not None:
+            lst.append(tail.data)
+            tail = tail.next
+
+        print("Linked List [%s]:" % self._type, lst)
+
 
 if __name__ == "__main__":
-    ll = LinkedList("double")
-    ll.append(1)
-    ll.append(2)
-    ll.prepend(3)
-    print(ll.header.next.next.prev.data)
-    ll.remove(3)
-    print(ll.header.next.next.data)
+    # Main method to demonstrate functionality of linked list
+    s_ll = LinkedList()
+    d_ll = LinkedList("double")
+    ops = ["append", "append", "prepend", "travel", "remove",
+           "travel"]
+    PRESENT = None
+    for i, op in zip(range(len(ops)), ops):
+        if op.lower() == "append":
+            PRESENT = i
+            s_ll.append(i)
+            d_ll.append(i)
+        elif op.lower() == "prepend":
+            PRESENT = i
+            s_ll.prepend(i)
+            d_ll.prepend(i)
+        elif PRESENT is not None and op.lower() == "remove":
+            s_ll.remove(PRESENT)
+            d_ll.remove(PRESENT)
+        elif op.lower() == "travel":
+            s_ll.travel()
+            d_ll.travel()
+        else:
+            print("ERROR: Not supported operation '%s'" % op.lower())
